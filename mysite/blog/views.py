@@ -4,8 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import FormMixin
 from .forms import CommentForm
-
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
@@ -76,6 +75,18 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
     template_name = "post_delete.html"
     context_object_name = "post"
     success_url = reverse_lazy("posts")
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Comment
+    template_name = "comment_form.html"
+    fields = ['content']
+
+    def get_success_url(self):
+        return reverse("post", kwargs={"pk": self.object.post.pk})
 
     def test_func(self):
         return self.get_object().author == self.request.user

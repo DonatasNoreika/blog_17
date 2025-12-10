@@ -33,6 +33,9 @@
                 {{ comment.author }}, {{ comment.date | date:"Y-m-d H:i:s" }}
             </div>
             <p>{{ comment.content }}</p>
+            {% if comment.author == user %}
+            <a class="btn btn-warning" href="{% url 'comment_update' comment.pk %}">Redaguoti</a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
