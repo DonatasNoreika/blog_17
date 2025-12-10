@@ -11,6 +11,11 @@
         </div>
         <h2>{{ post.title }}</h2>
         <p>{{ post.content }}</p>
+        {% if post.author == user %}
+        <div>
+            <a href="{% url 'post_update' post.pk %}" class="btn btn-warning">Redaguoti</a>
+        </div>
+        {% endif %}
         <hr>
         <h5>Komentarai:</h5>
         {% for comment in post.comments.all %}

@@ -1,5 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import generic
 from .models import Post
@@ -36,4 +36,16 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Post
+    template_name = "post_form.html"
+    fields = ['title', 'content']
+    # success_url = reverse_lazy("posts")
+
+    def get_success_url(self):
+        return reverse('post', kwargs={"pk": self.object.pk})
+
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
 
