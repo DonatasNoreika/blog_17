@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Įrašas{% endblock %}
+
+{% block content %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="small text-muted">
+            {{ post.author }}, {{ post.date | date:"Y-m-d H:i:s" }}
+        </div>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+        <hr>
+        <h5>Komentarai:</h5>
+        {% for comment in post.comments.all %}
+        <div class="mb-4">
+            <div class="small text-muted">
+                {{ comment.author }}, {{ comment.date | date:"Y-m-d H:i:s" }}
+            </div>
+            <p>{{ comment.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
