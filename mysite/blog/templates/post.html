@@ -35,6 +35,7 @@
             <p>{{ comment.content }}</p>
             {% if comment.author == user %}
             <a class="btn btn-warning" href="{% url 'comment_update' comment.pk %}">Redaguoti</a>
+            <a class="btn btn-danger" href="{% url 'comment_delete' comment.pk %}">Ištrinti</a>
             {% endif %}
         </div>
         {% endfor %}
