@@ -14,6 +14,7 @@
         {% if post.author == user %}
         <div>
             <a href="{% url 'post_update' post.pk %}" class="btn btn-warning">Redaguoti</a>
+            <a href="{% url 'post_delete' post.pk %}" class="btn btn-danger">Ištrinti</a>
         </div>
         {% endif %}
         <hr>
