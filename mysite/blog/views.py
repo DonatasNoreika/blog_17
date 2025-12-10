@@ -2,6 +2,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import generic
+from django.views.generic.edit import FormMixin
+from .forms import CommentForm
+
 from .models import Post
 from django.contrib.auth.forms import UserCreationForm
 
@@ -12,10 +15,28 @@ class PostListView(generic.ListView):
     context_object_name = "posts"
 
 
-class PostDetailView(generic.DetailView):
+class PostDetailView(FormMixin, generic.DetailView):
     model = Post
     template_name = "post.html"
     context_object_name = 'post'
+    form_class = CommentForm
+
+    def get_success_url(self):
+        return reverse("post", kwargs={"pk": self.object.pk})
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = self.get_object()
+        form.save()
+        return super().form_valid(form)
 
 
 class SignUp(generic.CreateView):
